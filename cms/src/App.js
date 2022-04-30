@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
+import { Provider } from "react-redux";
 import MDBox from "./components/MDBox";
 import Sidenav from "./examples/Sidenav";
 import Configurator from "./examples/Configurator";
@@ -13,6 +14,7 @@ import loginRoutes from "./loginRoutes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./context";
 import brandWhite from "./assets/images/logo-ct.png";
 import brandDark from "./assets/images/logo-ct-dark.png";
+import store from "./store";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -100,13 +102,15 @@ export default function App() {
 
   if (!token) {
     return (
-      <ThemeProvider theme={darkMode ? themeDark : theme}>
-        <CssBaseline />
-        <Routes>
-          {getRoutes(loginRoutes)}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={darkMode ? themeDark : theme}>
+          <CssBaseline />
+          <Routes>
+            {getRoutes(loginRoutes)}
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </ThemeProvider>
+      </Provider>
     );
   }
 

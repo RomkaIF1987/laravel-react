@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable import/no-cycle */
 import axios from "axios";
 import Helper from "../../utils/helper";
 import http, { baseApiURL, baseURL } from "../../http-common";
