@@ -51,7 +51,6 @@ class JwtService extends Helper.EventEmitter {
             this.emit("onAutoLogout", "Invalid Access Token");
             this.setSession(null);
           }
-          console.log("error", error);
           throw error;
         })
     );
