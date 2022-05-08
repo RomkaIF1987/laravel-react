@@ -100,6 +100,7 @@ class JwtService extends Helper.EventEmitter {
                 };
                 this.setSession(responseData);
                 resolve(responseData.user);
+                window.location.href = "/";
               }
             } else {
               this.setSession(null);
@@ -272,18 +273,18 @@ class JwtService extends Helper.EventEmitter {
   setSession = (jwt) => {
     if (jwt) {
       if (jwt.token) {
-        LocalStorage.setItem("NpgJWT", {
+        LocalStorage.setItem("RZJWT", {
           access_token: jwt.token.access_token,
           refresh_token: jwt.token.refresh_token,
           expires: Date.now() + jwt.token.expires_in * 1000,
         });
       }
       if (jwt.user) {
-        LocalStorage.setItem("NpgUser", jwt.user);
+        LocalStorage.setItem("RZUser", jwt.user);
       }
     } else {
-      LocalStorage.removeItem("NpgJWT");
-      LocalStorage.removeItem("NpgUser");
+      LocalStorage.removeItem("RZJWT");
+      LocalStorage.removeItem("RZUser");
     }
   };
 
@@ -303,6 +304,7 @@ class JwtService extends Helper.EventEmitter {
             } else {
               reject(response.data.error);
             }
+            window.location.href = "/login";
           })
           .catch((error) => {
             if (error.response && error.response.data) {
@@ -319,21 +321,21 @@ class JwtService extends Helper.EventEmitter {
   isAuthTokenValid = (accessToken) => accessToken;
 
   getAccessToken = () => {
-    const NpgJWT = LocalStorage.getItem("NpgJWT") || {};
-    return NpgJWT && NpgJWT.access_token ? NpgJWT.access_token : "";
+    const RZJWT = LocalStorage.getItem("RZJWT") || {};
+    return RZJWT && RZJWT.access_token ? RZJWT.access_token : "";
   };
 
   getSession = () => {
-    const NpgJWT = LocalStorage.getItem("NpgJWT") || {};
-    return NpgJWT || null;
+    const RZJWT = LocalStorage.getItem("RZJWT") || {};
+    return RZJWT || null;
   };
 
   getUserInfo = () => {
-    const NpgUser = LocalStorage.getItem("NpgUser") || {};
-    return NpgUser || null;
+    const RZUser = LocalStorage.getItem("RZUser") || {};
+    return RZUser || null;
   };
 
-  hasUserInfo = () => LocalStorage.hasItem("NpgUser");
+  hasUserInfo = () => LocalStorage.hasItem("RZUser");
 }
 
 const instance = new JwtService();

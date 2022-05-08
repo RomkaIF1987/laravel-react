@@ -584,20 +584,20 @@ class Helper {
   static getRequestParams() {
     const {
       match: { params: routerParams = {} },
-    } = LocalStorage.getItem("NpgRouter");
+    } = LocalStorage.getItem("RZRouter");
     return routerParams;
   }
 
   static getRequestPath() {
     let {
       match: { path: routerPath = "" },
-    } = LocalStorage.getItem("NpgRouter");
+    } = LocalStorage.getItem("RZRouter");
     routerPath = _.trim(routerPath, "/");
     return routerPath;
   }
 
   static getRequestRouter() {
-    const router = LocalStorage.getItem("NpgRouter");
+    const router = LocalStorage.getItem("RZRouter");
     return router;
   }
 

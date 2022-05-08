@@ -36,14 +36,14 @@ class LocalStorage {
   }
 
   static setItem(key, myObject) {
-    const oldObject = localStorage.getItem("NpgSettings") ? LocalStorage.getItems() : {};
+    const oldObject = localStorage.getItem("RZSettings") ? LocalStorage.getItems() : {};
     const newObject = { ...oldObject, ...{ [key]: myObject } };
-    localStorage.setItem("NpgSettings", LocalStorage.encrypt(JSON.stringify(newObject)));
+    localStorage.setItem("RZSettings", LocalStorage.encrypt(JSON.stringify(newObject)));
     return true;
   }
 
   static getItems() {
-    const myObject = localStorage.getItem("NpgSettings") || null;
+    const myObject = localStorage.getItem("RZSettings") || null;
     return myObject ? JSON.parse(LocalStorage.decrypt(myObject)) : null;
   }
 
@@ -61,7 +61,7 @@ class LocalStorage {
     const myObject = LocalStorage.getItems();
     if (myObject !== null && this.hasItem(key)) {
       delete myObject[key];
-      localStorage.setItem("NpgSettings", LocalStorage.encrypt(JSON.stringify(myObject)));
+      localStorage.setItem("RZSettings", LocalStorage.encrypt(JSON.stringify(myObject)));
     }
     return true;
   }
