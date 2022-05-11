@@ -20,7 +20,6 @@ const userSlice = createSlice({
 export const { setUser, userLoggedOut } = userSlice.actions;
 
 export const setUserData = (user) => async (dispatch) => {
-  console.log(user);
   history.location.state = {
     redirectUrl: user.redirectUrl,
   };

@@ -22,12 +22,13 @@
 
 // Material Dashboard 2 React layouts
 import Icon from "@mui/material/Icon";
-import Dashboard from "./layouts/dashboard";
+import Dashboard from "./pages/dashboard";
 import Tables from "./layouts/tables";
 import Billing from "./layouts/billing";
 import RTL from "./layouts/rtl";
 import Notifications from "./layouts/notifications";
 import Profile from "./layouts/profile";
+import Users from "./pages/users";
 
 const routes = [
   {
@@ -37,6 +38,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Users",
+    key: "users",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/users",
+    component: <Users />,
   },
   {
     type: "collapse",
