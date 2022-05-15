@@ -3,13 +3,13 @@ import MDBox from "../MDBox";
 import MDAvatar from "../MDAvatar";
 import MDTypography from "../MDTypography";
 
-function MDName({ image, name, email }) {
+function MDUserInfo({ image, firstName, lastName, email }) {
   return (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
-      {image && <MDAvatar src={image} name={name} size="sm" />}
+      {image && <MDAvatar src={image} name={`${firstName} ${lastName}`} size="sm" />}
       <MDBox ml={2} lineHeight={1}>
         <MDTypography display="block" variant="button" fontWeight="medium">
-          {name}
+          {firstName} {lastName}
         </MDTypography>
         <MDTypography variant="caption">{email}</MDTypography>
       </MDBox>
@@ -17,14 +17,18 @@ function MDName({ image, name, email }) {
   );
 }
 
-MDName.defaultProps = {
-  image: "",
+MDUserInfo.defaultProps = {
+  image: "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
+  firstName: "",
+  lastName: "",
+  email: "",
 };
 
-MDName.propTypes = {
+MDUserInfo.propTypes = {
   image: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  email: PropTypes.string,
 };
 
-export default MDName;
+export default MDUserInfo;

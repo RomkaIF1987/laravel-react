@@ -6,6 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   useMaterialUIController,
   setTransparentNavbar,
@@ -93,7 +94,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={{ mt: 2 }}
     >
       <NotificationItem
-        icon={<Icon>podcasts</Icon>}
+        icon={<LogoutIcon>logout</LogoutIcon>}
         title="Logout"
         onClick={() => jwtService.logout()}
       />

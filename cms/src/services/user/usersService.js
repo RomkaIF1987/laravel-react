@@ -1,12 +1,9 @@
 /* eslint-disable class-methods-use-this */
-
 import { BaseCRUDService } from "../baseCRUDService/baseCRUDService";
-import jwtService from "../jwtService";
 
 class UsersService extends BaseCRUDService {
   constructor(apiUrl = "/users") {
     super(apiUrl);
-    jwtService.init();
   }
 
   /* getUsers = (params) => () =>
