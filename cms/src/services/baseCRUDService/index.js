@@ -1,1 +1,2 @@
-export { default } from './baseCRUDService';
+// eslint-disable-next-line no-restricted-exports
+export { default } from "./baseCRUDService";

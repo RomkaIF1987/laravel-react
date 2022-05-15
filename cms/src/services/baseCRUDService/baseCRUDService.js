@@ -1,9 +1,10 @@
-import http from 'http-common';
+// eslint-disable-next-line import/no-unresolved
+import http from "http-common";
 
 class BaseCRUDService {
-  apiUrl = '';
+  apiUrl = "";
 
-  constructor(apiUrl = '') {
+  constructor(apiUrl = "") {
     this.apiUrl = apiUrl;
   }
 
@@ -11,7 +12,7 @@ class BaseCRUDService {
     return this.apiUrl;
   }
 
-  setApiUrl(apiUrl = '') {
+  setApiUrl(apiUrl = "") {
     this.apiUrl = apiUrl;
   }
 
@@ -19,16 +20,16 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(this.getApiUrl(), {
-          params
+          params,
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.data) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -42,14 +43,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(`${this.getApiUrl()}/stats`)
-        .then(response => {
+        .then((response) => {
           if (response.data) {
             resolve(response.data);
           } else {
             reject(response.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -63,14 +64,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(`${this.getApiUrl()}/${recordId}`)
-        .then(response => {
+        .then((response) => {
           if (response?.data) {
             resolve(response.data.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -84,14 +85,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(`${this.getApiUrl()}`)
-        .then(response => {
+        .then((response) => {
           if (response?.data) {
             resolve(response.data.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -105,14 +106,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .post(`${this.getApiUrl()}`, data)
-        .then(response => {
+        .then((response) => {
           if (response.data) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -124,20 +125,20 @@ class BaseCRUDService {
 
   updateRecord(data, recordId) {
     return new Promise((resolve, reject) => {
-      let method = 'put';
+      let method = "put";
       if (data instanceof FormData) {
-        data.append('_method', 'PUT');
-        method = 'post';
+        data.append("_method", "PUT");
+        method = "post";
       }
       http[method](`${this.getApiUrl()}/${recordId}`, data)
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -149,20 +150,20 @@ class BaseCRUDService {
 
   updateRecordWithoutId(data) {
     return new Promise((resolve, reject) => {
-      let method = 'put';
+      let method = "put";
       if (data instanceof FormData) {
-        data.append('_method', 'PUT');
-        method = 'post';
+        data.append("_method", "PUT");
+        method = "post";
       }
       http[method](`${this.getApiUrl()}`, data)
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -174,16 +175,16 @@ class BaseCRUDService {
 
   updateRecordStatus(data, recordId) {
     return new Promise((resolve, reject) => {
-      const method = 'put';
+      const method = "put";
       http[method](`${this.getApiUrl()}/${recordId}/status`, data)
-        .then(response => {
+        .then((response) => {
           if (response?.data?.data) {
             resolve(response.data.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -197,14 +198,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .delete(`${this.getApiUrl()}/${recordId}`)
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -218,14 +219,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .post(`${this.getApiUrl()}/clone`, { parent_id: recordId })
-        .then(response => {
+        .then((response) => {
           if (response.data) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -239,14 +240,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(`${this.getApiUrl()}/${recordId}/revisions`)
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -260,14 +261,14 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .get(`${this.getApiUrl()}/${recordId}/revisions/${revisionId}`)
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -281,16 +282,16 @@ class BaseCRUDService {
     return new Promise((resolve, reject) => {
       http
         .patch(`${this.getApiUrl()}/${recordId}/move`, {
-          position
+          position,
         })
-        .then(response => {
+        .then((response) => {
           if (response) {
             resolve(response.data);
           } else {
             reject(response.data.error);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             reject(error.response.data);
           } else {
@@ -301,12 +302,12 @@ class BaseCRUDService {
   }
 
   buildFormData(formData, data, parentKey) {
-    if (data && typeof data === 'object' && !(data instanceof Date) && !(data instanceof File)) {
-      Object.keys(data).forEach(key => {
+    if (data && typeof data === "object" && !(data instanceof Date) && !(data instanceof File)) {
+      Object.keys(data).forEach((key) => {
         this.buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
       });
     } else {
-      const value = data == null ? '' : data;
+      const value = data == null ? "" : data;
       formData.append(parentKey, value);
     }
     return formData;
