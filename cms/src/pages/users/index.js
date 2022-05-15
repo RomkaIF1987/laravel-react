@@ -10,7 +10,7 @@ import DataTable from "../../examples/Tables/DataTable";
 import MDBadge from "../../components/MDBadge";
 import MDName from "../../components/MDTable/MDName";
 import MDString from "../../components/MDTable/MDString";
-import { getUsers } from "../../services/user";
+import UsersService from "../../services/user";
 
 function Users() {
   const data = [
@@ -25,7 +25,7 @@ function Users() {
   const [users, setUsers] = useState();
 
   const handleGetUsers = useCallback(async () => {
-    await getUsers()().then((response) => {
+    await UsersService.getRecords().then((response) => {
       setUsers(response.data);
     });
   }, []);

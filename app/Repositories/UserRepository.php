@@ -39,9 +39,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUsers(Request $request)
     {
         $users = $this->model;
-        if (!$request->user()->isSuperAdmin() && isset($request->user()->company_id)) {
-            $users = $this->model->where('company_id', $request->user()->company_id);
-        }
 
         $request->validate([
             'offset' => 'integer',
@@ -53,7 +50,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
         $perPage = $this->model->getPerPage();
         $limit = (int) $request->input('limit', $perPage);
-        $users = $users->filter($request);
+//        $users = $users->filter($request);
 
         if ($request->has('sort') && $request->sort == 'role' && $request->has('order')) {
             $users = $users->select(['users.*'])->leftJoin('roles', 'roles.id', '=', 'role_id')->orderBy('roles.title', $request->input('order'));

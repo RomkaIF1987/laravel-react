@@ -43,7 +43,7 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        return (new UserCollection($this->userRepository->getUsers($request)))->response();
+        return (UserResource::collection($this->userRepository->getUsers($request)))->response();
     }
 
     /**
