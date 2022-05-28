@@ -15,10 +15,12 @@ import MDString from "../../components/MDTable/MDString";
 import UsersService from "../../services/user";
 import MDUserInfo from "../../components/MDTable/MDUserInfo";
 import MDButton from "../../components/MDButton";
+import UserEditPopup from "./component/userEditPopup";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [tableData, setTableData] = useState({ columns: [], rows: [] });
+  const [popupShow, setPopupShow] = useState(false);
 
   const handleGetUsers = useCallback(async () => {
     await UsersService.getRecords().then((response) => {
@@ -88,6 +90,7 @@ function Users() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      {popupShow && <UserEditPopup setPopupShow={setPopupShow} popupShow={popupShow} />}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -114,6 +117,10 @@ function Users() {
                   size="small"
                   sx={{ width: 160 }}
                   fullWidth
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPopupShow(true);
+                  }}
                 >
                   Add new
                 </MDButton>
