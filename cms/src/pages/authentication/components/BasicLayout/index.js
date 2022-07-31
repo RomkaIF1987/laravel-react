@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import MDBox from "../../../../components/MDBox";
 import PageLayout from "../../../../examples/LayoutContainers/PageLayout";
-import Footer from "../Footer";
+import ErrorMessage from "../ErrorMessage";
+import Footer from "../../../../components/Footer";
 
 function BasicLayout({ image, children }) {
   return (
@@ -30,6 +31,7 @@ function BasicLayout({ image, children }) {
           </Grid>
         </Grid>
       </MDBox>
+      <ErrorMessage />
       <Footer light />
     </PageLayout>
   );

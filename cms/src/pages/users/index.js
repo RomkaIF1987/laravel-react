@@ -6,9 +6,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
-import Footer from "../../components/Footer";
 import DataTable from "../../examples/Tables/DataTable";
 import MDBadge from "../../components/MDBadge";
 import MDString from "../../components/MDTable/MDString";
@@ -16,11 +13,13 @@ import UsersService from "../../services/user";
 import MDUserInfo from "../../components/MDTable/MDUserInfo";
 import MDButton from "../../components/MDButton";
 import UserEditPopup from "./component/userEditPopup";
+import DashboardLayout from "../../layouts/dashboard";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [tableData, setTableData] = useState({ columns: [], rows: [] });
   const [popupShow, setPopupShow] = useState(false);
+  const [editUserId, setEditUserId] = useState(false);
 
   const handleGetUsers = useCallback(async () => {
     await UsersService.getRecords().then((response) => {
@@ -65,6 +64,8 @@ function Users() {
                 sx={{ "&:hover": { color: "blue" } }}
                 onClick={(e) => {
                   e.preventDefault();
+                  setPopupShow(true);
+                  setEditUserId(user.id);
                 }}
               >
                 <EditIcon fontSize="medium" />
@@ -89,8 +90,9 @@ function Users() {
 
   return (
     <DashboardLayout>
-      <DashboardNavbar />
-      {popupShow && <UserEditPopup setPopupShow={setPopupShow} popupShow={popupShow} />}
+      {popupShow && (
+        <UserEditPopup setPopupShow={setPopupShow} popupShow={popupShow} editUserId={editUserId} />
+      )}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -120,6 +122,7 @@ function Users() {
                   onClick={(e) => {
                     e.preventDefault();
                     setPopupShow(true);
+                    setEditUserId(null);
                   }}
                 >
                   Add new
@@ -138,7 +141,6 @@ function Users() {
           </Grid>
         </Grid>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }

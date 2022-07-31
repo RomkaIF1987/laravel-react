@@ -5,15 +5,15 @@ import MDBox from "../MDBox";
 import MDTypography from "../MDTypography";
 import typography from "../../assets/theme/base/typography";
 
-function Footer({ company, links }) {
+function Footer({ company, links, light }) {
   const { href, name } = company;
   const { size } = typography;
 
   const renderLinks = () =>
     links.map((link) => (
-      <MDBox key={link.name} component="li" px={2} lineHeight={1}>
+      <MDBox key={link.name} component="li" px={2} lineHeight={1} color={light ? "white" : "text"}>
         <Link href={link.href} target="_blank">
-          <MDTypography variant="button" fontWeight="regular" color="text">
+          <MDTypography variant="button" fontWeight="regular" color={light ? "white" : "dark"}>
             {link.name}
           </MDTypography>
         </Link>
@@ -30,25 +30,26 @@ function Footer({ company, links }) {
       justifyContent="flex-start"
       alignItems="center"
       px={1.5}
+      color={light ? "white" : "text"}
     >
       <MDBox
         display="flex"
         justifyContent="center"
         alignItems="center"
         flexWrap="wrap"
-        color="text"
+        color={light ? "white" : "text"}
         fontSize={size.sm}
         px={1.5}
       >
         &copy; {new Date().getFullYear()}, made with
-        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
+        <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
           <Icon color="inherit" fontSize="inherit">
             favorite
           </Icon>
         </MDBox>
         by
         <Link href={href} target="_blank">
-          <MDTypography variant="button" fontWeight="medium">
+          <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
             &nbsp;{name}&nbsp;
           </MDTypography>
         </Link>
@@ -70,6 +71,7 @@ function Footer({ company, links }) {
             mt: 0,
           },
         })}
+        color={light ? "white" : "dark"}
       >
         {renderLinks()}
       </MDBox>
@@ -81,12 +83,14 @@ function Footer({ company, links }) {
 Footer.defaultProps = {
   company: { href: "/", name: "Roman Zhyliak" },
   links: [],
+  light: false,
 };
 
 // Typechecking props for the Footer
 Footer.propTypes = {
   company: PropTypes.objectOf(PropTypes.string),
   links: PropTypes.arrayOf(PropTypes.object),
+  light: PropTypes.bool,
 };
 
 export default Footer;

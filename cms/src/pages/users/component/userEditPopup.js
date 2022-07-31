@@ -16,15 +16,19 @@ import {
   Select,
   Switch,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch } from "react-redux";
 import pxToRem from "../../../assets/theme/functions/pxToRem";
 import MDButton from "../../../components/MDButton";
+import UsersService from "../../../services/user";
+import { showMessage } from "../../../store/messageSlice";
 
-function UserEditPopup({ setPopupShow, popupShow }) {
-  const [role, setRole] = useState();
+function UserEditPopup({ setPopupShow, popupShow, editUserId }) {
+  const dispatch = useDispatch();
+  const [user, setUser] = useState();
 
   const schema = yup
     .object()
@@ -32,39 +36,53 @@ function UserEditPopup({ setPopupShow, popupShow }) {
       first_name: yup.string().required("First Name is required field"),
       last_name: yup.string().required("Last Name is required field"),
       email: yup.string().email().required("Email is required field"),
-      password: yup
-        .string()
-        .required("Password is required field")
-        .min(8, "Password is too short - should be 8 chars minimum.")
-        .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     })
     .required();
 
   const {
-    register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => console.log(data);
+  const getHandleUser = useCallback(async () => {
+    await UsersService.getRecord(editUserId).then((response) => {
+      setUser(response);
+    });
+  }, [editUserId]);
+
+  const onSubmit = (data) => {
+    UsersService.updateRecord(data, editUserId).then(() => {
+      setPopupShow(false);
+      dispatch(showMessage({ message: "User successfully updated", variant: "success" }));
+    });
+  };
 
   const handleClose = () => {
     setPopupShow(false);
   };
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
-  };
 
   useEffect(() => {
-    setValue("first_name", "");
-  }, []);
+    if (editUserId) {
+      getHandleUser().then();
+    }
+  }, [getHandleUser]);
+
+  useEffect(() => {
+    setValue("first_name", user?.first_name || "");
+    setValue("last_name", user?.last_name || "");
+    setValue("email", user?.email || "");
+    setValue("password", user?.password || "");
+    setValue("role_id", user?.role_id || "");
+    setValue("status", user?.status || "");
+  }, [user]);
 
   return (
     <Dialog fullWidth maxWidth="md" open={popupShow} onClose={handleClose}>
-      <DialogTitle>Add New User</DialogTitle>
+      <DialogTitle>{editUserId ? `Edit ${user?.full_name}` : "Add New User"}</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={3}>
@@ -72,74 +90,107 @@ function UserEditPopup({ setPopupShow, popupShow }) {
               <DialogContentText>Fill all fields to create new user.</DialogContentText>
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="firstName"
-                label="First Name"
-                type="text"
-                fullWidth
-                variant="standard"
-                error={!!errors?.first_name}
-                helperText={errors?.first_name?.message || ""}
-                {...register("first_name")}
+              <Controller
+                name="first_name"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="firstName"
+                    label="First Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    error={!!errors?.first_name}
+                    helperText={errors?.first_name?.message || ""}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
-                margin="dense"
-                id="lastName"
-                label="Last Name"
-                type="text"
-                fullWidth
-                variant="standard"
-                error={!!errors?.last_name}
-                helperText={errors?.last_name?.message || ""}
-                {...register("last_name")}
+              <Controller
+                name="last_name"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    margin="dense"
+                    id="lastName"
+                    label="Last Name"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    error={!!errors?.last_name}
+                    helperText={errors?.last_name?.message || ""}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
-                margin="dense"
-                id="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-                error={!!errors?.email}
-                helperText={errors?.email?.message || ""}
-                {...register("email")}
+              <Controller
+                name="email"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    margin="dense"
+                    id="email"
+                    label="Email Address"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                    error={!!errors?.email}
+                    helperText={errors?.email?.message || ""}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
-                margin="dense"
-                id="password"
-                label="Password"
-                type="password"
-                fullWidth
-                variant="standard"
-                error={!!errors?.password}
-                helperText={errors?.password?.message || ""}
-                {...register("password")}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    margin="dense"
+                    id="password"
+                    label="Password"
+                    type="password"
+                    fullWidth
+                    variant="standard"
+                    error={!!errors?.password}
+                    helperText={errors?.password?.message || ""}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl variant="standard" margin="dense" fullWidth error={!!errors?.role}>
                 <InputLabel id="roleLabel">Role</InputLabel>
-                <Select
-                  labelId="roleLabel"
-                  defaultValue=""
-                  value={role}
-                  id="role"
-                  label="Role"
-                  onChange={handleRoleChange}
-                  sx={{ padding: `${pxToRem(4)} 0 ${pxToRem(5)}` }}
-                  {...register("role")}
-                >
-                  <MenuItem value={1}>Admin</MenuItem>
-                  <MenuItem value={2}>Super Admin</MenuItem>
-                </Select>
+                <Controller
+                  name="role_id"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      labelId="roleLabel"
+                      defaultValue=""
+                      value={value}
+                      id="role"
+                      label="Role"
+                      onChange={onChange}
+                      sx={{ padding: `${pxToRem(4)} 0 ${pxToRem(5)}` }}
+                    >
+                      <MenuItem value={1}>Admin</MenuItem>
+                      <MenuItem value={2}>Super Admin</MenuItem>
+                    </Select>
+                  )}
+                />
                 {errors?.password?.message && (
                   <FormHelperText>errors?.password?.message</FormHelperText>
                 )}
@@ -148,7 +199,15 @@ function UserEditPopup({ setPopupShow, popupShow }) {
             <Grid item xs={12} md={6}>
               <FormControlLabel
                 sx={{ paddingTop: `${pxToRem(15)}` }}
-                control={<Switch defaultChecked />}
+                control={
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <Switch onChange={onChange} value={value} checked={!!value} />
+                    )}
+                  />
+                }
                 label="Active"
               />
             </Grid>
@@ -169,12 +228,14 @@ function UserEditPopup({ setPopupShow, popupShow }) {
 
 UserEditPopup.defaultProps = {
   popupShow: false,
-  setPopupShow: () => {},
+  setPopupShow: () => null,
+  editUserId: null,
 };
 
 UserEditPopup.propTypes = {
   popupShow: PropTypes.bool,
   setPopupShow: PropTypes.func,
+  editUserId: PropTypes.number,
 };
 
 export default UserEditPopup;
