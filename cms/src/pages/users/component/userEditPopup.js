@@ -26,7 +26,7 @@ import MDButton from "../../../components/MDButton";
 import UsersService from "../../../services/user";
 import { showMessage } from "../../../store/messageSlice";
 
-function UserEditPopup({ setPopupShow, popupShow, editUserId }) {
+function UserEditPopup({ setPopupShow, popupShow, editUserId, handleGetUsers }) {
   const dispatch = useDispatch();
   const [user, setUser] = useState();
 
@@ -36,6 +36,8 @@ function UserEditPopup({ setPopupShow, popupShow, editUserId }) {
       first_name: yup.string().required("First Name is required field"),
       last_name: yup.string().required("Last Name is required field"),
       email: yup.string().email().required("Email is required field"),
+      role_id: yup.number().required("Role is required field"),
+      status: yup.boolean().required("Status is required field"),
     })
     .required();
 
@@ -50,15 +52,26 @@ function UserEditPopup({ setPopupShow, popupShow, editUserId }) {
 
   const getHandleUser = useCallback(async () => {
     await UsersService.getRecord(editUserId).then((response) => {
-      setUser(response);
+      if (response) {
+        setUser(response);
+      }
     });
   }, [editUserId]);
 
   const onSubmit = (data) => {
-    UsersService.updateRecord(data, editUserId).then(() => {
-      setPopupShow(false);
-      dispatch(showMessage({ message: "User successfully updated", variant: "success" }));
-    });
+    if (!editUserId) {
+      UsersService.storeRecord(data).then(() => {
+        setPopupShow(false);
+        dispatch(showMessage({ message: "User successfully created", variant: "success" }));
+        handleGetUsers();
+      });
+    } else {
+      UsersService.updateRecord(data, editUserId).then(() => {
+        setPopupShow(false);
+        dispatch(showMessage({ message: "User successfully updated", variant: "success" }));
+        handleGetUsers();
+      });
+    }
   };
 
   const handleClose = () => {
@@ -186,8 +199,8 @@ function UserEditPopup({ setPopupShow, popupShow, editUserId }) {
                       onChange={onChange}
                       sx={{ padding: `${pxToRem(4)} 0 ${pxToRem(5)}` }}
                     >
-                      <MenuItem value={1}>Admin</MenuItem>
-                      <MenuItem value={2}>Super Admin</MenuItem>
+                      <MenuItem value={1}>Super Admin</MenuItem>
+                      <MenuItem value={2}>Admin</MenuItem>
                     </Select>
                   )}
                 />
@@ -230,11 +243,13 @@ UserEditPopup.defaultProps = {
   popupShow: false,
   setPopupShow: () => null,
   editUserId: null,
+  handleGetUsers: () => null,
 };
 
 UserEditPopup.propTypes = {
   popupShow: PropTypes.bool,
   setPopupShow: PropTypes.func,
+  handleGetUsers: PropTypes.func,
   editUserId: PropTypes.number,
 };
 

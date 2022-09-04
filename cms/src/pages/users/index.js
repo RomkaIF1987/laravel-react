@@ -12,14 +12,15 @@ import MDString from "../../components/MDTable/MDString";
 import UsersService from "../../services/user";
 import MDUserInfo from "../../components/MDTable/MDUserInfo";
 import MDButton from "../../components/MDButton";
-import UserEditPopup from "./component/userEditPopup";
 import DashboardLayout from "../../layouts/dashboard";
+import { UserDeletePopup, UserEditPopup } from "./component";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [tableData, setTableData] = useState({ columns: [], rows: [] });
-  const [popupShow, setPopupShow] = useState(false);
-  const [editUserId, setEditUserId] = useState(false);
+  const [editPopupShow, setEditPopupShow] = useState(false);
+  const [deletePopupShow, setDeletePopupShow] = useState(false);
+  const [editUserId, setEditUserId] = useState();
 
   const handleGetUsers = useCallback(async () => {
     await UsersService.getRecords().then((response) => {
@@ -52,7 +53,11 @@ function Users() {
           role: <MDString title={user.role} />,
           status: (
             <MDBox ml={-1}>
-              <MDBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+              {user?.status ? (
+                <MDBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+              ) : (
+                <MDBadge badgeContent="inactive" color="secondary" variant="gradient" size="sm" />
+              )}
             </MDBox>
           ),
           action: (
@@ -64,7 +69,7 @@ function Users() {
                 sx={{ "&:hover": { color: "blue" } }}
                 onClick={(e) => {
                   e.preventDefault();
-                  setPopupShow(true);
+                  setEditPopupShow(true);
                   setEditUserId(user.id);
                 }}
               >
@@ -77,6 +82,8 @@ function Users() {
                 sx={{ "&:hover": { color: "red" } }}
                 onClick={(e) => {
                   e.preventDefault();
+                  setDeletePopupShow(true);
+                  setEditUserId(user.id);
                 }}
               >
                 <DeleteIcon fontSize="medium" />
@@ -90,8 +97,21 @@ function Users() {
 
   return (
     <DashboardLayout>
-      {popupShow && (
-        <UserEditPopup setPopupShow={setPopupShow} popupShow={popupShow} editUserId={editUserId} />
+      {editPopupShow && (
+        <UserEditPopup
+          setPopupShow={setEditPopupShow}
+          popupShow={editPopupShow}
+          editUserId={editUserId}
+          handleGetUsers={handleGetUsers}
+        />
+      )}
+      {deletePopupShow && (
+        <UserDeletePopup
+          setPopupShow={setDeletePopupShow}
+          popupShow={deletePopupShow}
+          editUserId={editUserId}
+          handleGetUsers={handleGetUsers}
+        />
       )}
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
@@ -121,7 +141,7 @@ function Users() {
                   fullWidth
                   onClick={(e) => {
                     e.preventDefault();
-                    setPopupShow(true);
+                    setEditPopupShow(true);
                     setEditUserId(null);
                   }}
                 >

@@ -1,20 +1,26 @@
 import Container from "@mui/material/Container";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import MDBox from "../../../../components/MDBox";
 import MDAlert from "../../../../components/MDAlert";
+import { hideMessage } from "../../../../store/messageSlice";
 
 function ErrorMessage() {
+  const dispatch = useDispatch();
   const message = useSelector((state) => state.message);
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     if (message.state) {
       setShowMessage(true);
+      dispatch(hideMessage());
     }
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setShowMessage(false);
     }, message?.options?.autoHideDuration || 6000);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [message]);
 
   if (showMessage) {
